@@ -26,11 +26,11 @@ int main()
         scanf("%d", &playerchoice);
         if (playerchoice < 1 || playerchoice > 3) 
         {
-            printf("Invalid choice, try again!\n\n");
+            printf("\nInvalid choice, try again!\n");
             continue;
         }
         opponentchoice = rand() % 3 + 1; //% 3 gives 0, 1, 2, so we add 1 to make it 1, 2, 3
-        printf("You chose: %s\n", moves[playerchoice]);
+        printf("\nYou chose: %s\n", moves[playerchoice]);
         printf("John chose: %s\n", moves[opponentchoice]);
         break;
     }
