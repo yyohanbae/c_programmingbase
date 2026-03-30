@@ -18,27 +18,133 @@ int main()
     printf("--------------------------------------\n");
     printf("[BRACKET]\n\n[1] %s VS [2] John\n[3] Alex VS [4] Steve\n[5] Jun VS [6] David\n[7] Oliver VS [8] Sofia\n", playername);
     printf("--------------------------------------\n");
-    printf("QUARTERFINALS:\nYour first opponent is [2] John\n");
+    printf("QUARTERFINALS:\nYour opponent is John\n");
     printf("--------------------------------------\n");
+
     while (1)
     {
         printf("1: Rock   2: Paper   3: Scissor\nYour choice? > ");
-        scanf("%d", &playerchoice);
+
+        if (scanf("%d", &playerchoice) != 1)
+        {
+            printf("\nInvalid input. Please enter a number!\n");
+            while(getchar() != '\n');
+            continue;
+        }
+
         if (playerchoice < 1 || playerchoice > 3) 
         {
             printf("\nInvalid choice, try again!\n");
             continue;
         }
+
         opponentchoice = rand() % 3 + 1; //% 3 gives 0, 1, 2, so we add 1 to make it 1, 2, 3
-        printf("\nYou chose: %s\n", moves[playerchoice]);
-        printf("John chose: %s\n", moves[opponentchoice]);
+        printf("\nYou chose: %s     John chose: %s\n", moves[playerchoice], moves[opponentchoice]);
+
+        if (playerchoice == opponentchoice)
+        {
+            printf("Tie! Try again.\n\n");
+            continue;
+        }
+
+        if ((playerchoice == 1 && opponentchoice == 3) || (playerchoice == 2 && opponentchoice == 1) || (playerchoice == 3 && opponentchoice == 2))
+        {
+            printf("You win. Onto the semifinals!\n");
+        }
+        else
+        {
+            printf("You lose. Better luck next time!\n");
+            return 0;
+        }
+
         break;
     }
     
+    printf("--------------------------------------\n");
+    printf("SEMIFINALS:\nYour opponent is %s\n", semichoices[semiopponent]);
+    printf("--------------------------------------\n");
 
+    while (1)
+    {
+        printf("1: Rock   2: Paper   3: Scissor\nYour choice? > ");
 
+        if (scanf("%d", &playerchoice) != 1)
+        {
+            printf("\nInvalid input. Please enter a number!\n");
+            while(getchar() != '\n');
+            continue;
+        }
 
+        if (playerchoice < 1 || playerchoice > 3) 
+        {
+            printf("\nInvalid choice, try again!\n");
+            continue;
+        }
 
-    printf("Your next opponent is: %s\n", semichoices[semiopponent]); //use later
+        opponentchoice = rand() % 3 + 1; //% 3 gives 0, 1, 2, so we add 1 to make it 1, 2, 3
+        printf("\nYou chose: %s     %s chose: %s\n", moves[playerchoice], semichoices[semiopponent], moves[opponentchoice]);
+
+        if (playerchoice == opponentchoice)
+        {
+            printf("Tie! Try again.\n\n");
+            continue;
+        }
+
+        if ((playerchoice == 1 && opponentchoice == 3) || (playerchoice == 2 && opponentchoice == 1) || (playerchoice == 3 && opponentchoice == 2))
+        {
+            printf("You win. Onto the finals!\n");
+        }
+        else
+        {
+            printf("You lose. Better luck next time!\n");
+            return 0;
+        }
+
+        break;
+    }
+
+    printf("--------------------------------------\n");
+    printf("FINALS:\nYour opponent is %s\n", finalschoices[finalsopponent]);
+    printf("--------------------------------------\n");
+
+    while (1)
+    {
+        printf("1: Rock   2: Paper   3: Scissor\nYour choice? > ");
+
+        if (scanf("%d", &playerchoice) != 1)
+        {
+            printf("\nInvalid input. Please enter a number!\n");
+            while(getchar() != '\n');
+            continue;
+        }
+
+        if (playerchoice < 1 || playerchoice > 3) 
+        {
+            printf("\nInvalid choice, try again!\n");
+            continue;
+        }
+
+        opponentchoice = rand() % 3 + 1; //% 3 gives 0, 1, 2, so we add 1 to make it 1, 2, 3
+        printf("\nYou chose: %s     %s chose: %s\n", moves[playerchoice], finalschoices[finalsopponent], moves[opponentchoice]);
+
+        if (playerchoice == opponentchoice)
+        {
+            printf("Tie! Try again.\n\n");
+            continue;
+        }
+
+        if ((playerchoice == 1 && opponentchoice == 3) || (playerchoice == 2 && opponentchoice == 1) || (playerchoice == 3 && opponentchoice == 2))
+        {
+            printf("You win the whole tournament. Congratulations!\n");
+        }
+        else
+        {
+            printf("You were so close! Better luck next time!\n");
+            return 0;
+        }
+
+        break;
+    }
+
     return 0;
 }
