@@ -14,7 +14,7 @@ int main()
     int finalsopponent = rand() % 4;
 
     printf("\nWelcome to the 8-Player Rock-Paper-Scissor Tournament!\nWhat's your name?\n");
-    scanf("%s", playername);
+    scanf("%s", playername);    
     printf("--------------------------------------\n");
     printf("[BRACKET]\n\n[1] %s VS [2] John\n[3] Alex VS [4] Steve\n[5] Jun VS [6] David\n[7] Oliver VS [8] Sofia\n", playername);
     printf("--------------------------------------\n");
