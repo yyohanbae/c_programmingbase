@@ -2,40 +2,23 @@
 #include <stdlib.h>
 #include <time.h>
 
-// =========================
-// PLAYER VARIABLES
-// =========================
-
 int stage = 1;
 int player_alive = 1;
-
 int level = 1;
 int xp = 0;
 int xp_needed = 20;
 int skill_points = 0;
-
 int gold = 0;
-
 int max_hp = 100;
 int hp = 100;
-
 int max_stamina = 50;
 int stamina = 50;
-
 int attack = 10;
 int defense = 5;
 int speed = 5;
-
-// =========================
-// INVENTORY
-// =========================
-
 int health_potions = 3;
-int stamina_potions = 2;
 
-// =========================
-// FUNCTION DECLARATIONS
-// =========================
+// functions
 
 void normal_stage();
 void npc_event();
@@ -46,17 +29,10 @@ void level_up();
 void show_stats();
 void game_over();
 
-// =========================
-// MAIN
-// =========================
-
 int main()
 {
     srand(time(NULL));
-
-    printf("===============================\n");
-    printf("ENDLESS RPG\n");
-    printf("===============================\n\n");
+    printf("\nWelcome to the Endless RPG Game!\n");
 
     while(player_alive)
     {
@@ -66,32 +42,30 @@ int main()
 
         show_stats();
 
-        // BOSS STAGE
+        // boss
         if(stage % 10 == 0)
         {
             boss_fight();
         }
 
-        // SHOP STAGE
+        // shop
         else if(stage % 10 == 9)
         {
             shop();
         }
 
-        // NORMAL STAGE
+        // normal stage
         else
         {
             normal_stage();
         }
 
-        // CHECK IF PLAYER DIED
         if(hp <= 0)
         {
             player_alive = 0;
             break;
         }
 
-        // CHECK LEVEL UP
         while(xp >= xp_needed)
         {
             level_up();
@@ -103,551 +77,4 @@ int main()
     game_over();
 
     return 0;
-}
-
-// =========================
-// NORMAL STAGE
-// =========================
-
-void normal_stage()
-{
-    int random_event = rand() % 100;
-
-    // 30% chance NPC
-    if(random_event < 30)
-    {
-        npc_event();
-    }
-
-    // 70% chance enemy
-    else
-    {
-        enemy_fight();
-    }
-}
-
-// =========================
-// NPC EVENTS
-// =========================
-
-void npc_event()
-{
-    int event = rand() % 4;
-
-    printf("\nYou encounter an NPC!\n");
-
-    if(event == 0)
-    {
-        int gain = rand() % 20 + 10;
-
-        printf("The NPC gives you %d gold!\n", gain);
-        gold += gain;
-    }
-
-    else if(event == 1)
-    {
-        int gain = rand() % 15 + 10;
-
-        printf("The NPC teaches you. Gain %d XP!\n", gain);
-        xp += gain;
-    }
-
-    else if(event == 2)
-    {
-        int heal = rand() % 20 + 10;
-
-        printf("The NPC heals you for %d HP!\n", heal);
-
-        hp += heal;
-
-        if(hp > max_hp)
-        {
-            hp = max_hp;
-        }
-    }
-
-    else
-    {
-        int damage = rand() % 15 + 5;
-
-        printf("The NPC was a thief! You lose %d HP!\n", damage);
-
-        hp -= damage;
-    }
-}
-
-// =========================
-// ENEMY FIGHT
-// =========================
-
-void enemy_fight()
-{
-    int enemy_type = rand() % 3;
-
-    int enemy_hp;
-    int enemy_attack;
-    int enemy_speed;
-
-    char enemy_name[50];
-
-    // =========================
-    // ENEMY TYPES
-    // =========================
-
-    // TANK
-    if(enemy_type == 0)
-    {
-        enemy_hp = 80 + (stage * 5);
-        enemy_attack = 8 + stage;
-        enemy_speed = 3;
-
-        printf("\nA TANK MONSTER appears!\n");
-    }
-
-    // GLASS CANNON
-    else if(enemy_type == 1)
-    {
-        enemy_hp = 40 + (stage * 3);
-        enemy_attack = 20 + (stage * 2);
-        enemy_speed = 5;
-
-        printf("\nA GLASS CANNON MONSTER appears!\n");
-    }
-
-    // FAST ENEMY
-    else
-    {
-        enemy_hp = 60 + (stage * 4);
-        enemy_attack = 12 + stage;
-        enemy_speed = 10;
-
-        printf("\nA FAST MONSTER appears!\n");
-    }
-
-    // =========================
-    // FIGHT LOOP
-    // =========================
-
-    while(enemy_hp > 0 && hp > 0)
-    {
-        int choice;
-
-        printf("\n====================\n");
-        printf("YOUR HP: %d/%d\n", hp, max_hp);
-        printf("YOUR STAMINA: %d/%d\n", stamina, max_stamina);
-        printf("ENEMY HP: %d\n", enemy_hp);
-        printf("====================\n");
-
-        printf("1. Attack (10 stamina)\n");
-        printf("2. Heal Potion\n");
-        printf("3. Recharge Stamina\n");
-        printf("4. View Stats\n");
-
-        printf("\nChoose: ");
-        scanf("%d", &choice);
-
-        // ATTACK
-        if(choice == 1)
-        {
-            if(stamina >= 10)
-            {
-                int damage = attack - (defense / 2);
-
-                // CRITICAL HIT CHANCE
-                if(rand() % 100 < 20)
-                {
-                    damage *= 2;
-                    printf("\nCRITICAL HIT!\n");
-                }
-
-                if(damage < 1)
-                {
-                    damage = 1;
-                }
-
-                enemy_hp -= damage;
-                stamina -= 10;
-
-                printf("You dealt %d damage!\n", damage);
-            }
-            else
-            {
-                printf("Not enough stamina!\n");
-            }
-        }
-
-        // HEAL
-        else if(choice == 2)
-        {
-            if(health_potions > 0)
-            {
-                int heal = 30;
-
-                hp += heal;
-
-                if(hp > max_hp)
-                {
-                    hp = max_hp;
-                }
-
-                health_potions--;
-
-                printf("You healed for %d HP!\n", heal);
-            }
-            else
-            {
-                printf("No health potions left!\n");
-            }
-        }
-
-        // RECHARGE STAMINA
-        else if(choice == 3)
-        {
-            stamina += 20;
-
-            if(stamina > max_stamina)
-            {
-                stamina = max_stamina;
-            }
-
-            printf("You restored stamina!\n");
-        }
-
-        // VIEW STATS
-        else if(choice == 4)
-        {
-            show_stats();
-            continue;
-        }
-
-        else
-        {
-            printf("Invalid choice!\n");
-            continue;
-        }
-
-        // ENEMY DEAD
-        if(enemy_hp <= 0)
-        {
-            break;
-        }
-
-        // ENEMY ATTACK
-        int enemy_damage = enemy_attack - defense;
-
-        if(enemy_damage < 1)
-        {
-            enemy_damage = 1;
-        }
-
-        hp -= enemy_damage;
-
-        printf("Enemy attacks for %d damage!\n", enemy_damage);
-    }
-
-    // =========================
-    // REWARDS
-    // =========================
-
-    if(hp > 0)
-    {
-        int gold_gain = rand() % 30 + (stage * 2);
-        int xp_gain = rand() % 20 + (stage * 2);
-
-        printf("\nEnemy defeated!\n");
-        printf("You gained %d gold!\n", gold_gain);
-        printf("You gained %d XP!\n", xp_gain);
-
-        gold += gold_gain;
-        xp += xp_gain;
-    }
-}
-
-// =========================
-// BOSS FIGHT
-// =========================
-
-void boss_fight()
-{
-    int boss_hp = 200 + (stage * 10);
-    int boss_attack = 25 + (stage * 2);
-
-    printf("\n===============================\n");
-    printf("BOSS FIGHT!\n");
-    printf("===============================\n");
-
-    while(boss_hp > 0 && hp > 0)
-    {
-        int choice;
-
-        printf("\nYOUR HP: %d/%d\n", hp, max_hp);
-        printf("YOUR STAMINA: %d/%d\n", stamina, max_stamina);
-        printf("BOSS HP: %d\n", boss_hp);
-
-        printf("\n1. Attack\n");
-        printf("2. Heal Potion\n");
-        printf("3. Recharge Stamina\n");
-
-        printf("Choose: ");
-        scanf("%d", &choice);
-
-        if(choice == 1)
-        {
-            if(stamina >= 15)
-            {
-                int damage = attack * 2;
-
-                boss_hp -= damage;
-                stamina -= 15;
-
-                printf("You strike the boss for %d damage!\n", damage);
-            }
-            else
-            {
-                printf("Not enough stamina!\n");
-            }
-        }
-
-        else if(choice == 2)
-        {
-            if(health_potions > 0)
-            {
-                hp += 40;
-
-                if(hp > max_hp)
-                {
-                    hp = max_hp;
-                }
-
-                health_potions--;
-
-                printf("You healed!\n");
-            }
-            else
-            {
-                printf("No potions left!\n");
-            }
-        }
-
-        else if(choice == 3)
-        {
-            stamina += 25;
-
-            if(stamina > max_stamina)
-            {
-                stamina = max_stamina;
-            }
-
-            printf("You recovered stamina!\n");
-        }
-
-        if(boss_hp <= 0)
-        {
-            break;
-        }
-
-        int damage = boss_attack - defense;
-
-        if(damage < 1)
-        {
-            damage = 1;
-        }
-
-        hp -= damage;
-
-        printf("Boss attacks for %d damage!\n", damage);
-    }
-
-    if(hp > 0)
-    {
-        int gold_gain = 100 + (stage * 5);
-        int xp_gain = 75 + (stage * 5);
-
-        printf("\nBOSS DEFEATED!\n");
-        printf("You gained %d gold!\n", gold_gain);
-        printf("You gained %d XP!\n", xp_gain);
-
-        gold += gold_gain;
-        xp += xp_gain;
-    }
-}
-
-// =========================
-// SHOP
-// =========================
-
-void shop()
-{
-    int choice;
-
-    printf("\n===============================\n");
-    printf("SHOP\n");
-    printf("===============================\n");
-
-    printf("Gold: %d\n", gold);
-
-    printf("\n1. Health Potion (30 gold)\n");
-    printf("2. Stamina Potion (20 gold)\n");
-    printf("3. Increase Attack (+2) (100 gold)\n");
-    printf("4. Leave Shop\n");
-
-    printf("\nChoose: ");
-    scanf("%d", &choice);
-
-    if(choice == 1)
-    {
-        if(gold >= 30)
-        {
-            gold -= 30;
-            health_potions++;
-
-            printf("Bought Health Potion!\n");
-        }
-        else
-        {
-            printf("Not enough gold!\n");
-        }
-    }
-
-    else if(choice == 2)
-    {
-        if(gold >= 20)
-        {
-            gold -= 20;
-            stamina_potions++;
-
-            printf("Bought Stamina Potion!\n");
-        }
-        else
-        {
-            printf("Not enough gold!\n");
-        }
-    }
-
-    else if(choice == 3)
-    {
-        if(gold >= 100)
-        {
-            gold -= 100;
-            attack += 2;
-
-            printf("Attack increased!\n");
-        }
-        else
-        {
-            printf("Not enough gold!\n");
-        }
-    }
-
-    else
-    {
-        printf("Leaving shop...\n");
-    }
-}
-
-// =========================
-// LEVEL UP
-// =========================
-
-void level_up()
-{
-    int choice;
-
-    level++;
-    xp -= xp_needed;
-    xp_needed += 20;
-
-    skill_points += 3;
-
-    printf("\n===============================\n");
-    printf("LEVEL UP!\n");
-    printf("You are now level %d\n", level);
-    printf("You gained 3 skill points!\n");
-    printf("===============================\n");
-
-    while(skill_points > 0)
-    {
-        printf("\nSkill Points Remaining: %d\n", skill_points);
-
-        printf("1. Increase Max HP (+10)\n");
-        printf("2. Increase Attack (+2)\n");
-        printf("3. Increase Defense (+2)\n");
-        printf("4. Increase Max Stamina (+5)\n");
-        printf("5. Increase Speed (+1)\n");
-
-        printf("\nChoose stat: ");
-        scanf("%d", &choice);
-
-        if(choice == 1)
-        {
-            max_hp += 10;
-            hp += 10;
-        }
-
-        else if(choice == 2)
-        {
-            attack += 2;
-        }
-
-        else if(choice == 3)
-        {
-            defense += 2;
-        }
-
-        else if(choice == 4)
-        {
-            max_stamina += 5;
-            stamina += 5;
-        }
-
-        else if(choice == 5)
-        {
-            speed += 1;
-        }
-
-        else
-        {
-            printf("Invalid choice!\n");
-            continue;
-        }
-
-        skill_points--;
-    }
-}
-
-// =========================
-// SHOW STATS
-// =========================
-
-void show_stats()
-{
-    printf("\nPLAYER STATS\n");
-    printf("-------------------\n");
-    printf("Level: %d\n", level);
-    printf("HP: %d/%d\n", hp, max_hp);
-    printf("Stamina: %d/%d\n", stamina, max_stamina);
-    printf("Attack: %d\n", attack);
-    printf("Defense: %d\n", defense);
-    printf("Speed: %d\n", speed);
-    printf("Gold: %d\n", gold);
-    printf("XP: %d/%d\n", xp, xp_needed);
-    printf("Health Potions: %d\n", health_potions);
-    printf("-------------------\n");
-}
-
-// =========================
-// GAME OVER
-// =========================
-
-void game_over()
-{
-    printf("\n===============================\n");
-    printf("GAME OVER\n");
-    printf("===============================\n");
-
-    printf("You reached Stage %d\n", stage);
-    printf("Final Level: %d\n", level);
-    printf("Final Gold: %d\n", gold);
-
-    printf("\nThanks for playing!\n");
 }
