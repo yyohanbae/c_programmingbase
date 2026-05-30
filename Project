@@ -18,8 +18,7 @@ int defense = 5;
 int speed = 5;
 int health_potions = 3;
 
-// functions
-
+// 짜야되는 함수
 void normal_stage();
 void npc_event();
 void enemy_fight();
@@ -28,6 +27,7 @@ void shop();
 void level_up();
 void show_stats();
 void game_over();
+//
 
 int main()
 {
